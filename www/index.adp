@@ -1,6 +1,6 @@
 <master>
-<center>
-<table border="0" cellpadding="8" cellspacing="0" width="80%">
+<property name="doc(title)">OpenACS Documentation</property>
+<table style="margin: 0 auto;" border="0" cellpadding="8" cellspacing="0" width="80%">
 
 <tr><td valign="top" align="left">
 <h3>OpenACS Core Documentation</h3>
@@ -49,13 +49,13 @@ if {[db_table_exists apm_package_types]} {
 				  "[acs_package_root_dir $package_key]/www/doc/index.*"] 0]
   	
         if { [file exists $index_page] } {
-	    if {![empty_string_p $pretty_name]} {
+	    if {$pretty_name ne ""} {
 	       adp_puts "<li><a href=\"/doc/$package_key/\">$pretty_name</a>\n"
 	    } else {
 	       adp_puts "<li><a href=\"/doc/$package_key/\">$package_key</a>\n"
 	    }
         } else { 
-            if {![empty_string_p $pretty_name]} {
+            if {$pretty_name ne ""} {
 	       adp_puts "<li>$pretty_name\n"
 	    } else {
 	       adp_puts "<li>$package_key\n"
@@ -71,7 +71,7 @@ if {!$found_p} {
     adp_puts "</ul>"
 
 set packages [core_docs_uninstalled_packages]
-if { ! [empty_string_p $packages] } { 
+if { $packages ne "" } { 
   adp_puts "\n<h3>Uninstalled packages</h3>\n<ul>"
   foreach {key name} $packages { 
     set index_page [lindex [glob -nocomplain \
@@ -98,4 +98,3 @@ Please visit the
 <a href="http://openacs.org/forums/">OpenACS forums</a> or send email to <a href="mailto:docs@openacs.org">docs@openacs.org</a>.
 </p>
 
-</center>

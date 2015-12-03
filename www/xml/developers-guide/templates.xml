@@ -94,7 +94,7 @@ ad_page_contract {
 } -query {
 }
 
-set user_id [ad_verify_and_get_user_id]
+set user_id [ad_conn user_id]
 
 db_1row user_name {
     select first_names || ' ' || last_name as user_name 
@@ -160,10 +160,10 @@ and insert this text:
 <programlisting>
 
 &lt;master src="master"&gt;
-&lt;property name="title"&gt;@page_title@&lt;/property&gt;
-&lt;property name="context_bar"&gt;@context_bar@&lt;/property&gt;
+&lt;property name="title"&gt;@page_title;literal@&lt;/property&gt;
+&lt;property name="context_bar"&gt;@context_bar;literal@&lt;/property&gt;
 
-&lt;form action=@target@&gt;
+&lt;form action="@target@"&gt;
 &lt;p&gt;Title: 
 &lt;input type="text" name="title" value=""&gt;
 &lt;/p&gt;
@@ -172,7 +172,7 @@ and insert this text:
 &lt;/p&gt;
 &lt;p&gt;
 &lt;center&gt;
-&lt;input type=submit value="@submit_label@"&gt;
+&lt;input type="submit" value="@submit_label@"&gt;
 &lt;/center&gt;
 &lt;/p&gt;
 &lt;/form&gt;
@@ -187,30 +187,7 @@ characters. Another point to note is the use of a master template:
 Master templates allow you do centralize display code that is used
 throughout an application in a single file. In this case, we intend to
 have a master template that does the standard page headers and footers
-for us - create the <computeroutput>master.adp</computeroutput> file, which looks like
-this:
-</para>
-
- 
-
-<programlisting>
-
-&lt;%= [ad_header $title] %&gt; 
-&lt;h2&gt;@title@&lt;/h2&gt; 
-&lt;%= [eval ad_context_bar $context_bar] %&gt; 
-&lt;hr&gt; 
-&lt;slave&gt; 
-&lt;br clear="all"&gt; 
-&lt;%= [ad_footer] %&gt;
-
-</programlisting>
-
-
-<para>
-The main subtlety in this code is the inline Tcl code for running
-procs to build the header, footer, context bar, etc.  Also, note the
-property substitutions that happen here, the values of which are set
-up in the <computeroutput>&lt;property&gt;</computeroutput> tags in the slave page.  
+for us
 </para>
 
 <para>
