@@ -39,6 +39,276 @@ linkend="changelog-latest"></xref>) since the last release and in the
 entire &majorversion;.&minorversion; release sequence <xref linkend="changelog"></xref>.</para>
 -->
 
+<sect2 id="release-notes-5-9-0">
+  <title>Release 5.9.0</title>
+  <itemizedlist>
+    <listitem><para>
+      The release of OpenACS 5.9.0 contains the 78 packages of the oacs-5-9 branch.
+      These packages include the OpenACS core packages, the major
+      application packages (e.g. most the ones used on OpenACS.org), and
+      DotLRN 2.9.0.
+    </para></listitem>
+
+    <listitem><para>
+      Summary of changes:
+      <itemizedlist>
+	<listitem><para>SQL:
+	<itemizedlist>
+
+	  <listitem><para>
+            Improved performance of acs-object deletion.
+	  </para></listitem>
+
+	  <listitem><para>
+            Replaced many manual referential integrity calls by
+	    built-in handing in PostgreSQL.
+	  </para></listitem>
+
+	  <listitem><para>
+            Removed various manual bookkeeping and deletion operations
+	    in the content repository by built-in handing in PostgreSQL.
+	  </para></listitem>
+
+	  <listitem><para>
+            Removed tree_sortkey on acs-objects to reduce its size and
+	    to speedup operations, where the context-id is changed
+	    (could take on large installation several minutes in
+	    earlier versions)
+	  </para></listitem>
+
+	  <listitem><para>
+            Removed several uncalled / redundant SQL statements and functions.
+	  </para></listitem>
+
+	  <listitem><para> Cleanup of .xql files in acs-subsite:
+	  <itemizedlist spacing='compact' mark='opencircle'>
+	    <listitem><para> Some cleanup of .xql files: removed
+	    misleading sql-statements from db_* calls, which were
+	    ignored due .xql files
+	    </para></listitem>
+	    
+	    <listitem><para> Removed bug where same query-name was
+	    used in different branches of an if-statement for
+	    different sql statements, but the query-name lead to the
+	    wrong result.
+	    </para></listitem>
+
+	    <listitem><para> Removed multiple entries of same query
+	    name from .xql files (e.g. the entry
+	    "package_create_attribute_list.select_type_info" was
+	    7 (!) times in a single .xql file)
+	    </para></listitem>
+
+	  </itemizedlist>	    
+
+	  </para></listitem>
+	</itemizedlist>	    
+	</para></listitem>
+
+	<listitem><para>Web Interface:
+	<itemizedlist>
+
+ 	  <listitem><para>
+            Improve Performance of WebSites created with OpenACS:
+	    e.g. move core.js to a body requests, provide kernel
+	    parameter ResourcesExpireInterval to specify expiration
+	    times for resources.
+	  </para></listitem>
+
+ 	  <listitem><para>
+            Much better protection against XSS attacks.
+	  </para></listitem>
+	  
+ 	  <listitem><para>
+            Improved HTML validity (especially for admin pages)
+	  </para></listitem>
+
+	  <listitem><para>
+            Improved admin interface:
+	    <itemizedlist spacing='compact' mark='opencircle'>
+	      	   
+	      <listitem><para>
+		Placed all installation options to a single page.
+	      </para></listitem>
+
+	      <listitem><para>
+		Added pagination to /admin/applications (was unusable
+		for large sites)
+	      </para></listitem>
+
+	      <listitem><para>
+		New admin pages for subsites linked from
+		site-wide-admin package (/acs-admin).
+	      </para></listitem>
+
+	      <listitem><para>
+		Added explanatory text to several admin pages.
+	      </para></listitem>
+
+	    </itemizedlist>
+	  </para></listitem>
+
+ 	  <listitem><para> Add lightweight support for ckeditor4 for
+ 	  templating::richtext widget (configurable via package
+ 	  parameter "RichTextEditor" of acs-templating. ckeditor4
+ 	  supports mobile devices (such as iPad, ...)
+ 	  </para></listitem>
+	</itemizedlist>
+	</para></listitem>
+
+	<listitem><para>Templating:
+	<itemizedlist>
+
+ 	  <listitem><para>
+            Improved theme-ability: Moved more information into theme
+	    packages in order to create responsive designs, reduce
+	    hard-coding of paths, HTML etc.
+	  </para></listitem>
+
+ 	  <listitem><para>
+            Improved include-handling: All includes are now
+	    theme-able, interfaces of includes can be defined with
+	    "ad_include_contract" (similar to ad_page_contract).
+	  </para></listitem>
+
+	  <listitem><para>
+            Improved them-ability for display_templates. One can now
+	    provide a display_template_name (similar to the sql
+	    statement name) to refer to display templates. This
+	    enables reusability and is theme-able.
+	  </para></listitem>
+
+	  <listitem><para> Dimensional slider reform (ad_dimensional):
+ 	  Removed hard-coded table layout from dimensional slider. Add
+ 	  backwards compatible templates Move hard-coded styles into
+ 	  theme styling </para></listitem>
+
+	  <listitem><para>
+	    Notification chunks are now theme-able as well (using ad_include_contrat)
+	  </para></listitem>
+
+	  <listitem><para>
+            Complete template variable suffixes (adding noi18n,
+	    addressing bug #2692, full list is now: noquote, noi18n, literal)
+	  </para></listitem>
+
+	  <listitem><para>
+	    Added timeout and configurable secrets for signed url
+	    parameters to export_vars/page_contracts.
+	    This can be used to secure sensitive operations
+	    such as granting permissions since a link can be set to
+	    timeout after e.g. 60 seconds; after that, the link is
+	    invalid. A secret (password) can be set in section
+	    ns/server/$server/acs parameter "parametersecret".
+	  
+	    For example, one can use now "user_id:sign(max_age=60)" in
+	    export_vars to let the exported variable expire after 60 seconds.
+	  </para></listitem>
+	  
+	</itemizedlist>
+	</para></listitem>
+
+	
+	<listitem><para>Misc:
+	<itemizedlist>
+	  <listitem><para>
+            Added ability to show ns_log statements of current request
+	    to developer support output when developer support is
+	    activated (controlled via package parameter "TclTraceLogServerities"
+	    in the acs-tcl package parameters)
+	  </para></listitem>
+
+	  <listitem><para>
+	    Added ability to save data sent by
+	    ns_return in files on the file system. This can be used to
+	    validate HTML content also for password protected pages
+	    (controlled via package parameter "TclTraceSaveNsReturn" in
+	    the acs-tcl package parameters)
+	  </para></listitem>
+	  
+	  <listitem><para>
+            New api function "ad_log" having the same interface as
+	    ns_log, but which logs the calling information (like URL
+	    and call-stack) to ease tracking of errors.
+	  </para></listitem>	  
+
+	  <listitem><para> Use per-thread caching to reduce number of
+	  mutex lock operations and lock contention on various caches
+	  (util-memoize, xo_site_nodes, xotcl_object_types) and nsvs
+	  (e.g ds_properties) </para></listitem>
+	  
+ 	  <listitem><para>
+            Improved templating of OpenACS core documentation
+	  </para></listitem>
+
+	  <listitem><para>
+            Improved Russian Internationalization
+	  </para></listitem>
+	  
+ 	  <listitem><para>
+            Make pretty-names of acs-core packages more consistent
+	  </para></listitem>
+
+	  <listitem><para>
+            Mark unused functions of acs-tcl/tcl/table-display-procs.tcl as deprecated
+	  </para></listitem>
+
+	  <listitem><para>
+            Many more bug fixes (from bug tracker and extra) and
+	    performance improvements.
+	  </para></listitem>
+
+	  
+ 	  <listitem><para>
+	    Version numbers:
+	    <itemizedlist spacing='compact' mark='opencircle'>
+	      <listitem><para>
+		Require PG 9.0 (End Of Life of PostgreSQL 8.4 was July 2014)
+	      </para></listitem>
+
+	      <listitem><para>
+		Require XOTcl 2.0 (presented at the Tcl conference in 2011). 
+	      </para></listitem>
+
+	    </itemizedlist>
+ 	  </para></listitem>
+	</itemizedlist>
+	</para></listitem>
+	
+	<listitem><para>Changes in application packages:
+	<itemizedlist>
+	  <listitem><para>
+	    Various bug
+	    fixes and improvements for e.g. file-storage, forums, news,
+	    notifications, xowiki.
+	  </para></listitem>
+	</itemizedlist>
+	</para></listitem>
+      </itemizedlist>
+    </para> </listitem>
+  </itemizedlist>
+  
+  <para> Altogether, OpenACS 5.9.0 differs from OpenACS 5.8.1 by the
+  following statistics
+  <programlisting>
+      3658 files changed, 120800 insertions(+), 97617 deletions(-)
+  </programlisting>
+  contributed by 4 committers (Michael Aram, Victor Guerra, Gustaf Neumann, Antonio Pisano) and
+  patch/bugfix providers (Frank Bergmann, Andrew Helsley, Felix
+  Mödritscher, Marcos Moser, Franz Penz, Thomas Renner).
+These are significantly more  changes as the differences
+in the last releases. All packages of the release were tested with
+PostgreSQL 9.4.* and Tcl 8.5.*.
+  For more
+  details, consult the  
+  <ulink
+      href="http://fisheye.openacs.org/browse/~br=oacs-5-9/OpenACS/openacs-4/ChangeLog?hb=true">
+  raw ChangeLog</ulink>.
+  </para>
+</sect2>
+
+
+
 <sect2  id="release-notes-5-8-1">
   <title>Release 5.8.1</title>
   <itemizedlist>
@@ -134,7 +404,7 @@ entire &majorversion;.&minorversion; release sequence <xref linkend="changelog">
 	  </para></listitem>
 
  	  <listitem><para>
-            Packages can be equipped with configuration files
+            Packages can be equipped with xml-based configuration files
             (e.g. changing parameters for style packages)
 	  </para></listitem>
 
@@ -328,7 +598,7 @@ entire &majorversion;.&minorversion; release sequence <xref linkend="changelog">
         <para>
           Notifications now calls lang::util::localize on the message subject and body
           before sending the message out, using the recipient locale if set, the
-          site-wide one if not.  This will cause message keys (entered as #....# strings)
+          site-wide one if not.  This will cause message keys (entered as <span>#</span>....# strings)
           to be replaced with the language text for the chosen locale.
         </para>
       </listitem>
