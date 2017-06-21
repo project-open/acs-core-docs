@@ -31,14 +31,14 @@ proc acs_pgbackup {} {
 
     ns_log Notice "Backup of [ad_system_name] starting."
     ns_log Notice "pg_dump beginning..."
-    if [catch {append msg [exec "pg_dump" "-U" "$pguser" "$servername" ">$bak/$data"]} errmsg] { 
+    if [catch {append msg [exec pg_dump "-U" "$pguser" "$servername" ">$bak/$data"]} errmsg] { 
 		ns_log Error "pg_dump failed: $errmsg" 
 		ns_sendmail [ad_system_owner] [ad_system_owner] "[ad_system_name] : pg_dump failed..." "$errmsg" 
 		return 
     }	
     append msg "\n"
     ns_log Notice "gzip of data beginning..." 	
-    if [catch {append msg [exec "gzip" "-f" "$bak/$data"]} errmsg] { 
+    if [catch {append msg [exec gzip "-f" "$bak/$data"]} errmsg] { 
 		ns_log Error "gzip of data failed: $errmsg" 
 		ns_sendmail [ad_system_owner] [ad_system_owner] "[ad_system_name] : gzip of data failed..." "$errmsg" 
 		return 
@@ -49,7 +49,7 @@ proc acs_pgbackup {} {
     
     puts $fd "user $ftp_user ${ftp_password}\nbinary\nput $bak/$data.gz ${ftp_dir}/$data.gz\nquit\n"
     close $fd	
-    if [catch {append msg [exec "ftp" "-n" $ftp_server "<$bak/ftp_data.tmp"]} errmsg] { 
+    if [catch {append msg [exec ftp "-n" $ftp_server "<$bak/ftp_data.tmp"]} errmsg] { 
 		ns_log Error "ftp data failed: $errmsg" 
 		ns_sendmail [ad_system_owner] [ad_system_owner] "[ad_system_name] : ftp data failed..." "$errmsg" 
 		return 
@@ -58,7 +58,7 @@ proc acs_pgbackup {} {
     
     # Replicate the above code to make remote copies to other systems	
     ns_log Notice "vacuum beginning..." 	
-    if [catch {append msg [exec "vacuumdb" "-U" "$pguser" "-q" "-z" "$servername"]} errmsg] { 
+    if [catch {append msg [exec vacuumdb "-U" "$pguser" "-q" "-z" "$servername"]} errmsg] { 
 		ns_log Error "vacuum failed: $errmsg" 
 		ns_sendmail [ad_system_owner] [ad_system_owner] "[ad_system_name] : vacuum failed..." "$errmsg" 
     }	
